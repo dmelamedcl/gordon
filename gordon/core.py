@@ -448,6 +448,7 @@ class ProjectApply(ProjectApplyLoopBase):
         parameters_paths = (
             os.path.join(self.path, 'parameters', 'common.yml'),
             os.path.join(self.path, 'parameters', '{}.yml'.format(self.stage)),
+            os.path.join(self.path, 'parameters', '{}_secrets.yml'.format(self.stage)),
         )
 
         # Retrieve the account_id of the credentials currently in use.

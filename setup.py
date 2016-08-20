@@ -8,7 +8,8 @@ install_requires = [
     'PyYAML>=3,<4.0',
     'troposphere>=1.6,<2.0',
     'Jinja2>=2.8,<3.0',
-    'six>1.9,<2.0'
+    'six>1.9,<2.0',
+    'ansible_vault>=1.0.4,<2.0'
 ]
 
 # as of Python >= 2.7 argparse module is maintained within Python.
@@ -18,7 +19,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name='gordon',
-    version='0.2.1',
+    version='0.2.1.1',
     url='http://github.com/jorgebastida/gordon',
     license='BSD',
     author='Jorge Bastida',

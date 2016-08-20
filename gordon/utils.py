@@ -18,6 +18,7 @@ import jinja2
 import troposphere
 from troposphere import cloudformation
 from clint.textui import colored, puts, indent
+from ansible_vault import Vault
 
 from . import exceptions
 from gordon import get_version
@@ -128,6 +129,10 @@ def setup_region(region, settings=None):
     os.environ['AWS_DEFAULT_REGION'] = region
     return region
 
+def decrypt_settings(filename, stage):
+    vault_password = os.environ.get('VAULT_PASSWORD_{stage}'.format(stage=stage))
+    vault = Vault(vault_password)
+    return vault.load(open(filename).read())
 
 def load_settings(filename, default=None, jinja2_enrich=False, context=None, protocols=None, ):
     """Returns a dictionary of the settings included in the YAML file
@@ -145,8 +150,11 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
     if not os.path.isfile(filename):
         custom_settings = {}
     else:
-        with open(filename, 'r') as f:
-            custom_settings = yaml.load(f) or {}
+        if 'secrets' in filename:
+            custom_settings = decrypt_settings(filename, context['stage']) or {}
+        else:
+            with open(filename, 'r') as f:
+                custom_settings = yaml.load(f) or {}
 
     def _jinja2_enrich(obj):
         if isinstance(obj, dict):
