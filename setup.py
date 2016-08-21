@@ -19,7 +19,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name='gordon',
-    version='0.2.1.1',
+    version='0.2.1.2',
     url='http://github.com/jorgebastida/gordon',
     license='BSD',
     author='Jorge Bastida',

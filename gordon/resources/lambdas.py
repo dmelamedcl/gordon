@@ -459,17 +459,15 @@ class Lambda(base.BaseResource):
             raise exceptions.LambdaBuildProcessError(exc, self)
 
         output = six.BytesIO()
-        zf = zipfile.ZipFile(output, 'w')
+        with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for basedir, dirs, files in os.walk(destination):
+                relative = os.path.relpath(basedir, destination)
 
-        for basedir, dirs, files in os.walk(destination):
-            relative = os.path.relpath(basedir, destination)
+                for filename in files:
+                    source = os.path.join(destination, basedir, filename)
+                    relative_destination = os.path.join(relative, filename)
+                    zf.write(source, relative_destination)
 
-            for filename in files:
-                source = os.path.join(destination, basedir, filename)
-                relative_destination = os.path.join(relative, filename)
-                zf.write(source, relative_destination)
-
-        zf.close()
         output.seek(0)
         shutil.rmtree(destination)
         return output
